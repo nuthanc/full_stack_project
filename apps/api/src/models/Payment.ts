@@ -1,30 +1,36 @@
-import { Model } from 'objection';
+import { Model, QueryContext, ModelOptions } from 'objection';
+import Booking from './Booking.js';
 
-export class Payment extends Model {
-  static tableName = 'payments';
-
+export default class Payment extends Model {
   id!: number;
   booking_id!: number;
-  payment_method!: string; // e.g., "credit_card", "net_banking", etc.
-  payment_status!: string; // e.g., "success", "failed", "pending"
-  transaction_id?: string;
+  amount!: number;
+  status!: 'pending' | 'completed' | 'failed';
+  payment_time!: string;
+  created_at?: string;
+  updated_at?: string;
+
+  static get tableName(): string {
+    return 'payments';
+  }
 
   static get jsonSchema() {
     return {
       type: 'object',
-      required: ['booking_id', 'payment_method', 'payment_status'],
+      required: ['booking_id', 'amount', 'status'],
       properties: {
         id: { type: 'integer' },
         booking_id: { type: 'integer' },
-        payment_method: { type: 'string', minLength: 1, maxLength: 50 },
-        payment_status: { type: 'string', minLength: 1, maxLength: 50 },
-        transaction_id: { type: 'string' },
+        amount: { type: 'number' },
+        status: { type: 'string', enum: ['pending', 'completed', 'failed'] },
+        payment_time: { type: 'string', format: 'date-time' },
+        created_at: { type: 'string', format: 'date-time' },
+        updated_at: { type: 'string', format: 'date-time' },
       },
     };
   }
 
   static get relationMappings() {
-    const Booking = require('./Booking').Booking;
     return {
       booking: {
         relation: Model.BelongsToOneRelation,
@@ -35,5 +41,18 @@ export class Payment extends Model {
         },
       },
     };
+  }
+
+  async $beforeInsert(context: QueryContext): Promise<void> {
+    await super.$beforeInsert(context);
+    const now = new Date().toISOString();
+    this.payment_time = now;
+    this.created_at = now;
+    this.updated_at = now;
+  }
+
+  async $beforeUpdate(opt: ModelOptions, context: QueryContext): Promise<void> {
+    await super.$beforeUpdate(opt, context);
+    this.updated_at = new Date().toISOString();
   }
 }

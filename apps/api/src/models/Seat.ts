@@ -1,12 +1,17 @@
-import { Model } from 'objection';
+import { Model, QueryContext, ModelOptions } from 'objection';
+import Hall from './Hall.js';
 
-export class Seat extends Model {
-  static tableName = 'seats';
-
+export default class Seat extends Model {
   id!: number;
   hall_id!: number;
-  seat_number!: string; // e.g., "A1", "B2"
-  is_available!: boolean;
+  seat_number!: string;
+  is_booked = false;
+  created_at?: string;
+  updated_at?: string;
+
+  static get tableName(): string {
+    return 'seats';
+  }
 
   static get jsonSchema() {
     return {
@@ -15,14 +20,15 @@ export class Seat extends Model {
       properties: {
         id: { type: 'integer' },
         hall_id: { type: 'integer' },
-        seat_number: { type: 'string', minLength: 1, maxLength: 10 },
-        is_available: { type: 'boolean' },
+        seat_number: { type: 'string', minLength: 1, maxLength: 50 },
+        is_booked: { type: 'boolean', default: false },
+        created_at: { type: 'string', format: 'date-time' },
+        updated_at: { type: 'string', format: 'date-time' },
       },
     };
   }
 
   static get relationMappings() {
-    const Hall = require('./Hall').Hall;
     return {
       hall: {
         relation: Model.BelongsToOneRelation,
@@ -33,5 +39,17 @@ export class Seat extends Model {
         },
       },
     };
+  }
+
+  async $beforeInsert(context: QueryContext): Promise<void> {
+    await super.$beforeInsert(context);
+    const now = new Date().toISOString();
+    this.created_at = now;
+    this.updated_at = now;
+  }
+
+  async $beforeUpdate(opt: ModelOptions, context: QueryContext): Promise<void> {
+    await super.$beforeUpdate(opt, context);
+    this.updated_at = new Date().toISOString();
   }
 }

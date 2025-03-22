@@ -1,10 +1,15 @@
-import { Model } from 'objection';
+import { Model, QueryContext, ModelOptions } from 'objection';
+import Theatre from './Theatre.js';
 
-export class City extends Model {
-  static tableName = 'cities';
-
+export default class City extends Model {
   id!: number;
   name!: string;
+  created_at?: string;
+  updated_at?: string;
+
+  static get tableName(): string {
+    return 'cities';
+  }
 
   static get jsonSchema() {
     return {
@@ -12,13 +17,14 @@ export class City extends Model {
       required: ['name'],
       properties: {
         id: { type: 'integer' },
-        name: { type: 'string', minLength: 1, maxLength: 100 },
+        name: { type: 'string', minLength: 1, maxLength: 255 },
+        created_at: { type: 'string', format: 'date-time' },
+        updated_at: { type: 'string', format: 'date-time' },
       },
     };
   }
 
   static get relationMappings() {
-    const Theatre = require('./Theatre').Theatre;
     return {
       theatres: {
         relation: Model.HasManyRelation,
@@ -29,5 +35,17 @@ export class City extends Model {
         },
       },
     };
+  }
+
+  async $beforeInsert(context: QueryContext): Promise<void> {
+    await super.$beforeInsert(context);
+    const now = new Date().toISOString();
+    this.created_at = now;
+    this.updated_at = now;
+  }
+
+  async $beforeUpdate(opt: ModelOptions, context: QueryContext): Promise<void> {
+    await super.$beforeUpdate(opt, context);
+    this.updated_at = new Date().toISOString();
   }
 }

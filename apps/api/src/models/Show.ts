@@ -1,32 +1,36 @@
-import { Model } from 'objection';
+import { Model, QueryContext, ModelOptions } from 'objection';
+import Movie from './Movie.js';
+import Hall from './Hall.js';
+import Booking from './Booking.js';
 
-export class Show extends Model {
-  static tableName = 'shows';
-
+export default class Show extends Model {
   id!: number;
   movie_id!: number;
   hall_id!: number;
-  start_time!: string; // ISO date-time string
-  end_time!: string; // ISO date-time string
+  start_time!: string;
+  created_at?: string;
+  updated_at?: string;
+
+  static get tableName(): string {
+    return 'shows';
+  }
 
   static get jsonSchema() {
     return {
       type: 'object',
-      required: ['movie_id', 'hall_id', 'start_time', 'end_time'],
+      required: ['movie_id', 'hall_id', 'start_time'],
       properties: {
         id: { type: 'integer' },
         movie_id: { type: 'integer' },
         hall_id: { type: 'integer' },
         start_time: { type: 'string', format: 'date-time' },
-        end_time: { type: 'string', format: 'date-time' },
+        created_at: { type: 'string', format: 'date-time' },
+        updated_at: { type: 'string', format: 'date-time' },
       },
     };
   }
 
   static get relationMappings() {
-    const Movie = require('./Movie').Movie;
-    const Hall = require('./Hall').Hall;
-    const Booking = require('./Booking').Booking;
     return {
       movie: {
         relation: Model.BelongsToOneRelation,
@@ -53,5 +57,17 @@ export class Show extends Model {
         },
       },
     };
+  }
+
+  async $beforeInsert(context: QueryContext): Promise<void> {
+    await super.$beforeInsert(context);
+    const now = new Date().toISOString();
+    this.created_at = now;
+    this.updated_at = now;
+  }
+
+  async $beforeUpdate(opt: ModelOptions, context: QueryContext): Promise<void> {
+    await super.$beforeUpdate(opt, context);
+    this.updated_at = new Date().toISOString();
   }
 }
