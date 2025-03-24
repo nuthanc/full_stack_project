@@ -1,12 +1,15 @@
-import express from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
 dotenv.config();
 import './config/db'; // Initialize the DB connection
-// import routes from './routes'; // Import your consolidated routes
 
+// Import routes
+import authRoutes from './routes/authRoutes';
+import adminRoutes from './routes/adminRoutes';
+import clientRoutes from './routes/clientRoutes';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -18,7 +21,9 @@ app.use(helmet());
 app.use(morgan('dev'));
 
 // Mount routes
-// app.use('/api', routes);
+app.use('/api/auth', authRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/client', clientRoutes);
 
 // Global Error Handler
 app.use((err, req, res, next) => {
