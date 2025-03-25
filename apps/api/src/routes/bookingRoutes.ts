@@ -3,8 +3,8 @@ import {
   createBooking,
   getBookingById,
   getBookingsForUser,
-} from '../controllers/bookingController.js';
-import { authenticateUser } from '../middlewares/authMiddleware.js';
+} from '../controllers/bookingController';
+import { authenticateUser } from '../middlewares/authMiddleware';
 
 const router = Router();
 

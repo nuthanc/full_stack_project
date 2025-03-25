@@ -9,13 +9,13 @@ import './config/db'; // Initialize the DB connection
 // Import routes
 import authRoutes from './routes/authRoutes';
 import adminRoutes from './routes/adminRoutes';
-import bookingRoutes from './routes/bookingRoutes.js';
-import cityRoutes from './routes/cityRoutes.js';
-import movieRoutes from './routes/movieRoutes.js';
-import paymentRoutes from './routes/paymentRoutes.js';
-import seatRoutes from './routes/seatRoutes.js';
-import showRoutes from './routes/showRoutes.js';
-import theatreRoutes from './routes/theatreRoutes.js';
+import bookingRoutes from './routes/bookingRoutes';
+import cityRoutes from './routes/cityRoutes';
+import movieRoutes from './routes/movieRoutes';
+import paymentRoutes from './routes/paymentRoutes';
+import seatRoutes from './routes/seatRoutes';
+import showRoutes from './routes/showRoutes';
+import theatreRoutes from './routes/theatreRoutes';
 
 const app = express();
 const PORT = process.env.PORT || 3000;

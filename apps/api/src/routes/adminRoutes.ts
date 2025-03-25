@@ -1,10 +1,6 @@
 import { Router } from 'express';
-import {
-  addTheatre,
-  addHall,
-  addMovie,
-} from '../controllers/adminController.js';
-import { authenticateAdmin } from '../middlewares/authMiddleware.js';
+import { addTheatre, addHall, addMovie } from '../controllers/adminController';
+import { authenticateAdmin } from '../middlewares/authMiddleware';
 
 const router = Router();
 

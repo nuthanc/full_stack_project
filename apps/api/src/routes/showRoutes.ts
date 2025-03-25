@@ -3,7 +3,7 @@ import {
   getAllShows,
   getShowsByMovie,
   getShowsByTheatre,
-} from '../controllers/showController.js';
+} from '../controllers/showController';
 
 const router = Router();
 

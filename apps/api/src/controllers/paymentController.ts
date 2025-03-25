@@ -1,7 +1,7 @@
 import { Response, NextFunction } from 'express';
-import Payment from '../models/Payment.js';
-import Booking from '../models/Booking.js';
-import { AuthRequest } from '../middlewares/authMiddleware.js';
+import Payment from '../models/Payment';
+import Booking from '../models/Booking';
+import { AuthRequest } from '../middlewares/authMiddleware';
 
 export const createPayment = async (
   req: AuthRequest,

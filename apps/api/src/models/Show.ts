@@ -1,7 +1,7 @@
 import { Model, QueryContext, ModelOptions } from 'objection';
-import Movie from './Movie.js';
-import Hall from './Hall.js';
-import Booking from './Booking.js';
+import Movie from './Movie';
+import Hall from './Hall';
+import Booking from './Booking';
 
 export default class Show extends Model {
   id!: number;

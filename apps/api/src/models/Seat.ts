@@ -1,8 +1,8 @@
 // src/models/Seat.ts
 import { Model, QueryContext, ModelOptions } from 'objection';
-import Hall from './Hall.js';
-import BookingSeat from './BookingSeat.js';
-import Booking from './Booking.js';
+import Hall from './Hall';
+import BookingSeat from './BookingSeat';
+import Booking from './Booking';
 
 export default class Seat extends Model {
   id!: number;

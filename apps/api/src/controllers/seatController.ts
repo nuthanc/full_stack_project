@@ -1,8 +1,8 @@
 // src/controllers/seatController.ts
 import { Request, Response, NextFunction } from 'express';
-import Seat from '../models/Seat.js';
-import BookingSeat from '../models/BookingSeat.js';
-import Show from '../models/Show.js';
+import Seat from '../models/Seat';
+import BookingSeat from '../models/BookingSeat';
+import Show from '../models/Show';
 
 export const getAvailableSeats = async (
   req: Request,

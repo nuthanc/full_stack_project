@@ -1,9 +1,9 @@
 // src/controllers/bookingController.ts
 import { Response, NextFunction } from 'express';
-import Booking, { BookingInput } from '../models/Booking.js';
-import BookingSeat from '../models/BookingSeat.js';
-import Seat from '../models/Seat.js';
-import { AuthRequest } from '../middlewares/authMiddleware.js';
+import Booking, { BookingInput } from '../models/Booking';
+import BookingSeat from '../models/BookingSeat';
+import Seat from '../models/Seat';
+import { AuthRequest } from '../middlewares/authMiddleware';
 
 /**
  * Creates a new booking and associates seats through the booking_seats table.

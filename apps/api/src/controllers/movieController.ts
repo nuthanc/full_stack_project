@@ -1,6 +1,6 @@
 // src/controllers/movieController.ts
 import { Request, Response, NextFunction } from 'express';
-import Movie from '../models/Movie.js';
+import Movie from '../models/Movie';
 
 /**
  * Retrieves a list of all movies.

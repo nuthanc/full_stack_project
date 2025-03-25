@@ -1,6 +1,6 @@
 // src/routes/seatRoutes.ts
 import express from 'express';
-import { getAvailableSeats } from '../controllers/seatController.js';
+import { getAvailableSeats } from '../controllers/seatController';
 
 const router = express.Router();
 

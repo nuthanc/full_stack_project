@@ -3,7 +3,7 @@ import {
   getAllTheatres,
   getTheatresByCity,
   getTheatreById,
-} from '../controllers/theatreController.js';
+} from '../controllers/theatreController';
 
 const router = Router();
 

@@ -1,7 +1,7 @@
 // src/models/BookingSeat.ts
 import { Model } from 'objection';
-import Booking from './Booking.js';
-import Seat from './Seat.js';
+import Booking from './Booking';
+import Seat from './Seat';
 
 export default class BookingSeat extends Model {
   id!: number;

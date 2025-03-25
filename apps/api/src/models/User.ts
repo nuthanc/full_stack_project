@@ -1,5 +1,5 @@
 import { Model, QueryContext, ModelOptions } from 'objection';
-import Booking from './Booking.js';
+import Booking from './Booking';
 
 export default class User extends Model {
   id!: number;

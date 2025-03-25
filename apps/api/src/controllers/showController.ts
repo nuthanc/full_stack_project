@@ -1,6 +1,6 @@
 // src/controllers/showController.ts
 import { Request, Response, NextFunction } from 'express';
-import Show from '../models/Show.js';
+import Show from '../models/Show';
 
 /**
  * Retrieves a list of all shows.

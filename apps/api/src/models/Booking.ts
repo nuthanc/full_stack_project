@@ -1,16 +1,15 @@
 // src/models/Booking.ts
 import { Model, QueryContext, ModelOptions } from 'objection';
-import User from './User.js';
-import Show from './Show.js';
-import Payment from './Payment.js';
-import BookingSeat from './BookingSeat.js';
-import Seat from './Seat.js';
+import User from './User';
+import Show from './Show';
+import Payment from './Payment';
+import BookingSeat from './BookingSeat';
+import Seat from './Seat';
 
 export interface BookingInput {
   user_id: number;
   show_id: number;
 }
-
 
 export default class Booking extends Model {
   id!: number;

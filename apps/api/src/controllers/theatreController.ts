@@ -1,6 +1,6 @@
 // src/controllers/theatreController.ts
 import { Request, Response, NextFunction } from 'express';
-import Theatre from '../models/Theatre.js';
+import Theatre from '../models/Theatre';
 
 /**
  * Retrieves a list of all theatres.

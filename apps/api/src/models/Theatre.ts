@@ -1,6 +1,6 @@
 import { Model, QueryContext, ModelOptions } from 'objection';
-import City from './City.js';
-import Hall from './Hall.js';
+import City from './City';
+import Hall from './Hall';
 
 export default class Theatre extends Model {
   id!: number;

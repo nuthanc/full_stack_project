@@ -1,5 +1,5 @@
 import { Model, QueryContext, ModelOptions } from 'objection';
-import Show from './Show.js';
+import Show from './Show';
 
 export default class Movie extends Model {
   id!: number;

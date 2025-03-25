@@ -1,6 +1,6 @@
 // src/controllers/cityController.ts
 import { Request, Response, NextFunction } from 'express';
-import City from '../models/City.js'; // Ensure your City model is defined
+import City from '../models/City'; // Ensure your City model is defined
 
 /**
  * Retrieves a list of all cities.

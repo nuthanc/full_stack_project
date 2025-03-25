@@ -3,8 +3,8 @@ import express from 'express';
 import {
   createPayment,
   getPaymentByBooking,
-} from '../controllers/paymentController.js';
-import { authenticateUser } from '../middlewares/authMiddleware.js';
+} from '../controllers/paymentController';
+import { authenticateUser } from '../middlewares/authMiddleware';
 
 const router = express.Router();
 

@@ -1,8 +1,8 @@
 // src/controllers/adminController.ts
 import { Request, Response, NextFunction } from 'express';
-import Theatre from '../models/Theatre.js';
-import Hall from '../models/Hall.js';
-import Movie from '../models/Movie.js';
+import Theatre from '../models/Theatre';
+import Hall from '../models/Hall';
+import Movie from '../models/Movie';
 
 /**
  * Adds a new theatre.
