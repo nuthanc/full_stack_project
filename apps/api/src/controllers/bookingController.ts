@@ -1,73 +1,129 @@
 // src/controllers/bookingController.ts
-import { Request, Response, NextFunction } from 'express';
-import Booking from '../models/Booking.js';
-import Payment from '../models/Payment.js';
+import { Response, NextFunction } from 'express';
+import Booking, { BookingInput } from '../models/Booking.js';
+import BookingSeat from '../models/BookingSeat.js';
+import Seat from '../models/Seat.js';
+import { AuthRequest } from '../middlewares/authMiddleware.js';
 
-export const bookTicket = async (
-  req: Request,
+/**
+ * Creates a new booking and associates seats through the booking_seats table.
+ */
+export const createBooking = async (
+  req: AuthRequest,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    // Expected body: { showId: number, seatIds: number[] }
-    const { showId, seatIds } = req.body;
-    // Create a booking record linking the logged-in user with the show and selected seats.
-    const booking = await Booking.query().insert({
-      userId: req.user.id, // provided by auth middleware
-      showId,
-      seatIds,
-    });
-    res
-      .status(201)
-      .json({
-        success: true,
-        data: booking,
-        message: 'Ticket booked successfully',
+    const user = req.user;
+    if (!user) {
+      return res.status(401).json({ success: false, message: 'Unauthorized' });
+    }
+
+    const { show_id, seat_ids } = req.body;
+    if (!show_id || !seat_ids || !Array.isArray(seat_ids)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Missing required fields: show_id and seat_ids (array)',
       });
-  } catch (error) {
-    next(error);
-  }
-};
+    }
 
-export const makePayment = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    // Expected body: { bookingId: number, amount: number, paymentMethod: string }
-    const { bookingId, amount, paymentMethod } = req.body;
-    // Process payment via an integrated gateway in production
-    const payment = await Payment.query().insert({
-      bookingId,
-      amount,
-      paymentMethod,
-      status: 'SUCCESS',
+    const parsedSeatIds = seat_ids.map((seat: any) => Number(seat));
+
+    // Check if any seats are already booked for the same show
+    const existingBookings = await BookingSeat.query()
+      .join('bookings', 'booking_seats.booking_id', 'bookings.id')
+      .whereIn('booking_seats.seat_id', parsedSeatIds)
+      .andWhere('bookings.show_id', show_id);
+
+    if (existingBookings.length > 0) {
+      return res.status(409).json({
+        success: false,
+        message: 'Some of the selected seats are already booked',
+      });
+    }
+
+    const bookingData: BookingInput = {
+      user_id: Number(user.id),
+      show_id,
+    };
+
+    // Create the booking
+    const booking = await Booking.query().insert(bookingData);
+
+    // Insert into booking_seats
+    const bookingSeatsData = parsedSeatIds.map((seat_id: number) => ({
+      booking_id: booking.id,
+      seat_id,
+    }));
+
+    await BookingSeat.query().insert(bookingSeatsData);
+
+    return res.status(201).json({
+      success: true,
+      data: { booking, seat_ids: parsedSeatIds },
+      message: 'Booking created successfully',
     });
-    res
-      .status(200)
-      .json({ success: true, data: payment, message: 'Payment successful' });
   } catch (error) {
     next(error);
   }
 };
 
-export const getBookingDetails = async (
-  req: Request,
+/**
+ * Retrieves a booking by its ID.
+ * Only admins or the user who created the booking can access its details.
+ */
+export const getBookingById = async (
+  req: AuthRequest,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const { bookingId } = req.params;
-    const bookingDetails = await Booking.query()
+    const bookingId = parseInt(req.params.id, 10);
+    if (isNaN(bookingId)) {
+      return res
+        .status(400)
+        .json({ success: false, message: 'Invalid booking id' });
+    }
+
+    const booking = await Booking.query()
       .findById(bookingId)
-      .withGraphFetched('[user, show.[theatre, movie], seats]');
-    if (!bookingDetails) {
+      .withGraphFetched('[user, show, payment, seats]');
+
+    if (!booking) {
       return res
         .status(404)
         .json({ success: false, message: 'Booking not found' });
     }
-    res.status(200).json({ success: true, data: bookingDetails });
+
+    if (req.user.role !== 'admin' && booking.user_id !== Number(req.user.id)) {
+      return res.status(403).json({ success: false, message: 'Access denied' });
+    }
+
+    return res.status(200).json({ success: true, data: booking });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * Retrieves all bookings for the currently authenticated user.
+ */
+export const getBookingsForUser = async (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const user = req.user;
+    if (!user) {
+      return res.status(401).json({ success: false, message: 'Unauthorized' });
+    }
+
+    const bookings = await Booking.query()
+      .where('user_id', Number(user.id))
+      .withGraphFetched('[show, payment, seats]');
+
+    return res.status(200).json({ success: true, data: bookings });
   } catch (error) {
     next(error);
   }

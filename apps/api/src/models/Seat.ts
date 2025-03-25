@@ -1,5 +1,8 @@
+// src/models/Seat.ts
 import { Model, QueryContext, ModelOptions } from 'objection';
 import Hall from './Hall.js';
+import BookingSeat from './BookingSeat.js';
+import Booking from './Booking.js';
 
 export default class Seat extends Model {
   id!: number;
@@ -36,6 +39,26 @@ export default class Seat extends Model {
         join: {
           from: 'seats.hall_id',
           to: 'halls.id',
+        },
+      },
+      bookingSeats: {
+        relation: Model.HasManyRelation,
+        modelClass: BookingSeat,
+        join: {
+          from: 'seats.id',
+          to: 'booking_seats.seat_id',
+        },
+      },
+      bookings: {
+        relation: Model.ManyToManyRelation,
+        modelClass: Booking,
+        join: {
+          from: 'seats.id',
+          through: {
+            from: 'booking_seats.seat_id',
+            to: 'booking_seats.booking_id',
+          },
+          to: 'bookings.id',
         },
       },
     };

@@ -1,4 +1,4 @@
-import express, { Request, Response, NextFunction } from 'express';
+import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
@@ -9,7 +9,13 @@ import './config/db'; // Initialize the DB connection
 // Import routes
 import authRoutes from './routes/authRoutes';
 import adminRoutes from './routes/adminRoutes';
-import clientRoutes from './routes/clientRoutes';
+import bookingRoutes from './routes/bookingRoutes.js';
+import cityRoutes from './routes/cityRoutes.js';
+import movieRoutes from './routes/movieRoutes.js';
+import paymentRoutes from './routes/paymentRoutes.js';
+import seatRoutes from './routes/seatRoutes.js';
+import showRoutes from './routes/showRoutes.js';
+import theatreRoutes from './routes/theatreRoutes.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -23,7 +29,13 @@ app.use(morgan('dev'));
 // Mount routes
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
-app.use('/api/client', clientRoutes);
+app.use('/api/bookings', bookingRoutes);
+app.use('/api/cities', cityRoutes);
+app.use('/api/movies', movieRoutes);
+app.use('/api/payments', paymentRoutes);
+app.use('/api/seats', seatRoutes);
+app.use('/api/shows', showRoutes);
+app.use('/api/theatres', theatreRoutes);
 
 // Global Error Handler
 app.use((err, req, res, next) => {

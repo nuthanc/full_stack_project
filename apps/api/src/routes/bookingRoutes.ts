@@ -1,16 +1,15 @@
-// src/routes/bookingRoutes.ts
 import { Router } from 'express';
-import * as bookingController from '../controllers/bookingController.js';
+import {
+  createBooking,
+  getBookingById,
+  getBookingsForUser,
+} from '../controllers/bookingController.js';
 import { authenticateUser } from '../middlewares/authMiddleware.js';
 
 const router = Router();
 
-router.post('/', authenticateUser, bookingController.bookTicket);
-router.post('/payment', authenticateUser, bookingController.makePayment);
-router.get(
-  '/:bookingId',
-  authenticateUser,
-  bookingController.getBookingDetails
-);
+router.post('/', authenticateUser, createBooking);
+router.get('/my', authenticateUser, getBookingsForUser);
+router.get('/:id', authenticateUser, getBookingById);
 
 export default router;

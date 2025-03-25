@@ -1,9 +1,14 @@
-// src/routes/showRoutes.ts
 import { Router } from 'express';
-import { getShows } from '../controllers/showController.js';
+import {
+  getAllShows,
+  getShowsByMovie,
+  getShowsByTheatre,
+} from '../controllers/showController.js';
 
 const router = Router();
 
-router.get('/', getShows);
+router.get('/', getAllShows);
+router.get('/movie/:movieId', getShowsByMovie);
+router.get('/theatre/:theatreId', getShowsByTheatre);
 
 export default router;
