@@ -1,4 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { fetchBookingDetails } from '../api/api';
 
 interface Booking {
   id: number;
@@ -6,22 +8,39 @@ interface Booking {
 }
 
 const BookingDetails: React.FC = () => {
-  const [bookings, setBookings] = useState<Booking[]>([]);
+  // In production, fetch the user ID from auth context or secure storage
+  const {
+    data: bookings,
+    isLoading,
+    isError,
+  } = useQuery<Booking[]>({
+    queryKey: ['bookings', 1],
+    queryFn: () => fetchBookingDetails(1),
+    staleTime: 5 * 60 * 1000,
+  });
 
-  useEffect(() => {
-    // Replace with an API call to fetch booking details for the logged-in user
-    setBookings([
-      { id: 1, details: 'Booking 1 details' },
-      { id: 2, details: 'Booking 2 details' },
-    ]);
-  }, []);
+
+  if (isLoading)
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        Loading booking details...
+      </div>
+    );
+  if (isError)
+    return (
+      <div className="flex items-center justify-center min-h-screen text-red-500">
+        Error loading booking details.
+      </div>
+    );
 
   return (
-    <div>
-      <h1>Your Bookings</h1>
-      <ul>
-        {bookings.map((booking) => (
-          <li key={booking.id}>{booking.details}</li>
+    <div className="container px-4 py-8 mx-auto">
+      <h1 className="mb-6 text-3xl font-bold text-center">Your Bookings</h1>
+      <ul className="space-y-4">
+        {bookings?.map((booking: Booking) => (
+          <li key={booking.id} className="p-4 bg-white rounded shadow">
+            {booking.details}
+          </li>
         ))}
       </ul>
     </div>

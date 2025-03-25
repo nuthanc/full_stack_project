@@ -14,7 +14,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
   const login = async (username: string, password: string) => {
-    // Replace with a real API call and proper error handling
+    // In production, store tokens/credentials securely (e.g. in httpOnly cookies)
     if (username && password) {
       setIsAuthenticated(true);
     } else {

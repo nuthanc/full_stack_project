@@ -1,26 +1,56 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-
-const cities = ['New York', 'Los Angeles', 'Chicago', 'Houston'];
+import { useQuery } from '@tanstack/react-query';
+import { fetchCities } from '../api/api';
+import { useBooking } from '../context/BookingContext';
 
 const CitySelection: React.FC = () => {
   const navigate = useNavigate();
+  const { setCity } = useBooking();
+
+  const {
+    data: cities,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ['cities'],
+    queryFn: fetchCities,
+    staleTime: 5 * 60 * 1000,
+  });
+
 
   const handleCitySelect = (city: string) => {
-    // Optionally save selected city in state (e.g., via context or query params)
+    setCity(city);
     navigate('/select-movie');
   };
 
+  if (isLoading)
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        Loading cities...
+      </div>
+    );
+  if (isError)
+    return (
+      <div className="flex items-center justify-center min-h-screen text-red-500">
+        Error loading cities.
+      </div>
+    );
+
   return (
-    <div>
-      <h1>Select City</h1>
-      <ul>
-        {cities.map((city) => (
-          <li key={city}>
-            <button onClick={() => handleCitySelect(city)}>{city}</button>
-          </li>
+    <div className="container px-4 py-8 mx-auto">
+      <h1 className="mb-6 text-3xl font-bold text-center">Select City</h1>
+      <div className="flex flex-wrap justify-center gap-4">
+        {cities.map((city: string) => (
+          <button
+            key={city}
+            onClick={() => handleCitySelect(city)}
+            className="px-6 py-3 text-white bg-blue-500 rounded hover:bg-blue-700"
+          >
+            {city}
+          </button>
         ))}
-      </ul>
+      </div>
     </div>
   );
 };
