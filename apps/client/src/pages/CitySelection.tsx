@@ -41,13 +41,13 @@ const CitySelection: React.FC = () => {
     <div className="container px-4 py-8 mx-auto">
       <h1 className="mb-6 text-3xl font-bold text-center">Select City</h1>
       <div className="flex flex-wrap justify-center gap-4">
-        {cities.map((city: string) => (
+        {cities?.map((city) => (
           <button
-            key={city}
-            onClick={() => handleCitySelect(city)}
+            key={city.id}
+            onClick={() => handleCitySelect(city.name)}
             className="px-6 py-3 text-white bg-blue-500 rounded hover:bg-blue-700"
           >
-            {city}
+            {city.name}
           </button>
         ))}
       </div>

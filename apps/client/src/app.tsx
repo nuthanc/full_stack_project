@@ -19,6 +19,7 @@ import Payment from './pages/Payment';
 import SeatSelection from './pages/SeatSelection';
 import ShowSelection from './pages/ShowSelection';
 import TheatreSelection from './pages/TheatreSelection';
+import SignUp from './pages/SignUp';
 
 const ProtectedRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
   const { isAuthenticated } = useAuth();
@@ -30,46 +31,14 @@ const App: React.FC = () => {
     <Router>
       <Routes>
         <Route path="/login" element={<Login />} />
-        <Route
-          path="/select-city"
-          element={
-            <ProtectedRoute>
-              <CitySelection />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/select-movie"
-          element={
-            <ProtectedRoute>
-              <MovieSelection />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/select-theatre"
-          element={
-            <ProtectedRoute>
-              <TheatreSelection />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/select-show"
-          element={
-            <ProtectedRoute>
-              <ShowSelection />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/select-seat"
-          element={
-            <ProtectedRoute>
-              <SeatSelection />
-            </ProtectedRoute>
-          }
-        />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/select-city" element={<CitySelection />} />
+        <Route path="/select-movie" element={<MovieSelection />} />
+        <Route path="/select-theatre" element={<TheatreSelection />} />
+        <Route path="/select-show" element={<ShowSelection />} />
+        <Route path="/select-seat" element={<SeatSelection />} />
+
+        {/* Only Payment and Booking require authentication */}
         <Route
           path="/payment"
           element={
@@ -129,7 +98,8 @@ const App: React.FC = () => {
           }
         />
 
-        <Route path="*" element={<Navigate to="/login" replace />} />
+        {/* Default route */}
+        <Route path="*" element={<Navigate to="/select-city" replace />} />
       </Routes>
     </Router>
   );
