@@ -33,18 +33,28 @@ export interface Movie {
   id: number;
   title: string;
   description?: string;
-  release_date?: string;
+  duration?: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Hall {
+  id: number;
+  name: string;
+  theatre_id: number;
   created_at: string;
   updated_at: string;
 }
 
 export interface Show {
   id: number;
-  time: string;
-  theatre_id: number;
   movie_id: number;
+  hall_id: number;
+  start_time: string;
   created_at: string;
   updated_at: string;
+  movie?: Movie;
+  hall?: Hall;
 }
 
 export interface Seat {
@@ -116,7 +126,7 @@ export const fetchShows = async (
 
 export const fetchSeats = async (showId: number): Promise<Seat[]> => {
   const response = await apiClient.get<ApiResponse<Seat[]>>(
-    `/seats?showId=${showId}`
+    `/seats/available/${showId}`
   );
   return response.data.data;
 };

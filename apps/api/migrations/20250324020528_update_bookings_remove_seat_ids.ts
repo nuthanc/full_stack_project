@@ -8,6 +8,7 @@ export async function up(knex: Knex): Promise<void> {
 
 export async function down(knex: Knex): Promise<void> {
   await knex.schema.alterTable('bookings', (table) => {
-    table.specificType('seat_ids', 'integer[]').notNullable();
+    // Set a default empty array to avoid null values on existing rows
+    table.specificType('seat_ids', 'integer[]').notNullable().defaultTo('{}');
   });
 }

@@ -1,4 +1,6 @@
-export async function up(knex) {
+import { Knex } from 'knex';
+
+export async function up(knex: Knex): Promise<void> {
   await knex.schema.createTable('booking_seats', (table) => {
     table.increments('id').primary();
     table
@@ -6,7 +8,7 @@ export async function up(knex) {
       .unsigned()
       .notNullable()
       .references('id')
-      .inTable('bookings')
+      .inTable('public.bookings') // explicitly using the public schema
       .onDelete('CASCADE');
 
     table
@@ -14,13 +16,13 @@ export async function up(knex) {
       .unsigned()
       .notNullable()
       .references('id')
-      .inTable('seats')
+      .inTable('public.seats') // explicitly using the public schema
       .onDelete('CASCADE');
 
-    table.unique(['booking_id', 'seat_id']); // prevent duplicate entries
+    table.unique(['booking_id', 'seat_id']);
   });
 }
 
-export async function down(knex) {
+export async function down(knex: Knex): Promise<void> {
   await knex.schema.dropTableIfExists('booking_seats');
 }
